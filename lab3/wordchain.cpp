@@ -5,7 +5,17 @@
 using std::vector;
 using std::string;
 using std::cout;
-using std::endl;
+using std::endl; 
+
+ struct Node {                                                                                                                                                                             
+           vector<string> neighbours;                                                                                                                                                                
+           bool visited = false;                                                                                                                                                             
+           string link;                                                                                                                                                                     
+   };                                                                                                                                                                                        
+                                                                                                                                                                                             
+                                                                                                                                                                     
+
+
 
 // Typ som används för ordlistan. Den definieras med en typedef här så att du enkelt kan ändra
 // representationen av en ordlista utefter vad din implementation behöver. Funktionen
@@ -21,7 +31,34 @@ typedef vector<string> Dictionary;
 vector<string> find_shortest(const Dictionary &dict, const string &from, const string &to) {
     vector<string> result;
     cout << "TODO: Implement me!" << endl;
-    return result;
+    return result;  
+    vector<Node> graph;     
+    for(const string &word : dict)
+   { 
+    graph.push_back( Node{
+        
+        [dict,word](){ 
+        vector<string> res;
+        int score{0};
+         for(const string &next_word : dict)
+         { 
+            for(int j{};j < 4;++j) 
+            {  
+                if(word[j] == next_word[j])
+                { 
+                    ++score ;
+                }                     
+            } 
+            if(score == 3) 
+            { 
+                res.push_back(next_word);
+            }        
+            score = 0;
+        }
+         return res;}() , false, word}); 
+   } 
+   
+
 }
 
 /**
