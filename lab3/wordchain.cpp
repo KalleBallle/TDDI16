@@ -1,21 +1,54 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <queue>
+#include <algorithm>
 
 using std::vector;
 using std::string;
 using std::cout;
-using std::endl; 
+using std::endl;
+using std::queue; 
 
- struct Node {                                                                                                                                                                             
-           vector<string> neighbours;                                                                                                                                                                
-           bool visited = false;                                                                                                                                                             
-           string link;                                                                                                                                                                     
-   };                                                                                                                                                                                        
-                                                                                                                                                                                             
-                                                                                                                                                                     
+struct Node {                                                                                                                                                                             
+    vector<string> neighbours;                                                                                                                                                                
+    bool visited = false;                                                                                                                                                             
+    string link;                                                                                                                                                                     
+};                                                                                                                                                                                        
 
 
+bool bfs(vector<Node> graph, string const& from, string const& to){
+    queue<string> que; que.push(from);
+    auto curr = find_if(graph.begin(), graph.end(), //curr börjar som start
+    [&from](Node n){return n.link == from;});
+    (*curr).visited = true;
+    while (!((*curr).link ==  to)){
+        for(string x : (*curr).neighbours){
+            if(x == to){
+                return true;
+            } 
+            if(!((*curr).visited)){
+                (*curr).visited = true;
+                que.push((*curr).link);
+            }
+        }
+        ++curr;
+    }
+
+    return false;
+}
+
+/*
+Kolla igenom allas neighbours. 
+om vi hittar neighbour, add neighbour i que, kolla dens neighb.
+
+
+
+*/
+
+
+
+              
 
 // Typ som används för ordlistan. Den definieras med en typedef här så att du enkelt kan ändra
 // representationen av en ordlista utefter vad din implementation behöver. Funktionen
@@ -31,18 +64,16 @@ typedef vector<string> Dictionary;
 vector<string> find_shortest(const Dictionary &dict, const string &from, const string &to) {
     vector<string> result;
     cout << "TODO: Implement me!" << endl;
-    return result;  
     vector<Node> graph;     
     for(const string &word : dict)
    { 
     graph.push_back( Node{
-        
         [dict,word](){ 
         vector<string> res;
         int score{0};
          for(const string &next_word : dict)
          { 
-            for(int j{};j < 4;++j) 
+            for(int j{0}; j < 4; ++j) 
             {  
                 if(word[j] == next_word[j])
                 { 
@@ -52,13 +83,24 @@ vector<string> find_shortest(const Dictionary &dict, const string &from, const s
             if(score == 3) 
             { 
                 res.push_back(next_word);
+                //cout << word << " -> " << next_word << endl;
             }        
             score = 0;
-        }
-         return res;}() , false, word}); 
+        } 
+         return res;}() , false, word});  
    } 
    
+   /*for(int karl{0}; karl < graph.size(); ++karl){
+       cout << graph[karl].link << " -> ";
+   } cout << endl;
+   */
 
+
+
+
+   bfs(graph, from, to);
+
+   return result;
 }
 
 /**
