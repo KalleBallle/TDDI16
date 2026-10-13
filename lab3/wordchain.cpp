@@ -12,35 +12,77 @@ using std::queue;
 
 struct Node {                                                                                                                                                                             
     vector<string> neighbours;                                                                                                                                                                
-    bool visited = false;                                                                                                                                                             
+    bool visited = false;                                                                                                                                                           
     string link;                                                                                                                                                                     
 };                                                                                                                                                                                        
 
 
-bool bfs(vector<Node> graph, string const& from, string const& to){
+queue<string> bfs(vector<Node> graph, string const& from, string const& to){
     queue<string> que; que.push(from);
+    queue<string> path;
     auto curr = find_if(graph.begin(), graph.end(), //curr börjar som start
     [&from](Node n){return n.link == from;});
-    (*curr).visited = true;
-    while (!((*curr).link ==  to)){
+    //(*curr).visited = true;
+    for(int i{0}; i < graph.size(); ++i){       
         for(string x : (*curr).neighbours){
-            if(x == to){
-                return true;
-            } 
-            if(!((*curr).visited)){
-                (*curr).visited = true;
-                que.push((*curr).link);
-            }
+
+
+        if((*curr).visited == false){
+            que.push(x);
+            (*curr).visited = true;
         }
-        ++curr;
-    }
 
-    return false;
+        if(x == to){     
+            string popper {/*que.back()*/ to};
+            path.push(popper);
+            while(!que.empty()){
+                que.pop();
+                
+                for(int p{}; p < (*curr).neighbours.size(); ++p){
+
+                    cout << "NEH: " << (*curr).neighbours[p] << 
+                            "LINK: " << (*curr).link << endl; 
+                    cout << "POOP:" << popper <<endl;
+
+                    if((*curr).neighbours[p] == popper){
+                        if((*curr).neighbours[p] == from){
+                            path.push(from);
+                            return path;
+                        }
+                        path.push((*curr).neighbours[p]);
+                        popper = (*curr).neighbours[p];
+                        --curr;
+                        //cout << popper << "   popper" << endl;
+                    }
+                    que.pop();
+                }
+            }
+
+        }
+        
+    } 
+    ++curr;
+    
+}  
+return path;
 }
-
 /*
 Kolla igenom allas neighbours. 
 om vi hittar neighbour, add neighbour i que, kolla dens neighb.
+
+
+que 1: 1 
+       ^
+popper = 7
+path: 10 8 7 1
+          ^
+
+int minus;
+
+minus++;
+
+kolla om "10 - 1" har 10 i neighbours
+else pop
 
 
 
@@ -80,7 +122,7 @@ vector<string> find_shortest(const Dictionary &dict, const string &from, const s
                     ++score ;
                 }                     
             } 
-            if(score == 3) 
+            if(score == 3 && word != next_word) 
             { 
                 res.push_back(next_word);
                 //cout << word << " -> " << next_word << endl;
@@ -98,7 +140,14 @@ vector<string> find_shortest(const Dictionary &dict, const string &from, const s
 
 
 
-   bfs(graph, from, to);
+ queue<string> path{bfs(graph, from, to)};
+
+while(!path.empty()){
+    cout << "BACKKK    " << path.back() << endl;
+    path.pop();
+}
+   
+
 
    return result;
 }
