@@ -11,18 +11,69 @@ using std::endl;
 using std::queue; 
 
 struct Node {                                                                                                                                                                             
-    vector<string> neighbours;                                                                                                                                                                
+    vector<int> neighbours;                                                                                                                                                                
     bool visited = false;                                                                                                                                                           
-    string link;                                                                                                                                                                     
-};                                                                                                                                                                                        
+    string link; 
+    int prev = -1;                                                                                                                                                                     
+};                                                                                                                                                                                  
 
 
-queue<string> bfs(vector<Node> graph, string const& from, string const& to){
-    queue<string> que; que.push(from);
-    queue<string> path;
-    auto curr = find_if(graph.begin(), graph.end(), //curr börjar som start
-    [&from](Node n){return n.link == from;});
-    //(*curr).visited = true;
+ vector<string> bfs(vector<Node> graph, string const& from, string const& to){
+    
+    auto startIT = find_if(graph.begin(), graph.end(), //curr börjar som start
+    [&from](Node n){return n.link == from;}); 
+    int startINT{0}; 
+    while(graph[startINT].link != (*startIT).link)
+    {
+        ++startINT;  //göra detta för att kunan pusha en int på que
+    }
+
+    queue<int> que;
+    graph[startINT].visited = true;
+    que.push(startINT);
+
+    int found = -1; 
+
+    while(!que.empty() && found == -1)
+    { 
+        int curr = que.front();
+        que.pop();  
+        //nehpos är indexet for neigborn. negibours innehåller alla index för neighbors
+         for (int nehPos : graph[curr].neighbours)
+        { 
+            if(!(graph[nehPos].visited)) 
+            {
+                graph[nehPos].visited = true; 
+                graph[nehPos].prev = curr;
+                que.push(nehPos);
+            }  
+            //pushar alla icke visitade nehbors på que
+
+            if (graph[nehPos].link == to)
+            {
+                found = nehPos;
+                break;
+            }
+
+
+        }
+    }  
+
+       if (found == -1)
+        return {};
+
+    vector<string> path; 
+    //-1 == ingen prev  
+    
+    for (int i = found; i != -1; i = graph[i].prev)
+        path.push_back(graph[i].link); 
+    std::reverse(path.begin(), path.end()); 
+    return path;
+    
+
+    //(*curr).visited = true; 
+
+    /*
     for(int i{0}; i < graph.size(); ++i){       
         for(string x : (*curr).neighbours){
 
@@ -33,7 +84,7 @@ queue<string> bfs(vector<Node> graph, string const& from, string const& to){
         }
 
         if(x == to){     
-            string popper {/*que.back()*/ to};
+            string popper {que.back()};
             path.push(popper);
             while(!que.empty()){
                 que.pop();
@@ -64,7 +115,8 @@ queue<string> bfs(vector<Node> graph, string const& from, string const& to){
     ++curr;
     
 }  
-return path;
+return path; 
+*/
 }
 /*
 Kolla igenom allas neighbours. 
@@ -88,8 +140,6 @@ else pop
 
 */
 
-
-
               
 
 // Typ som används för ordlistan. Den definieras med en typedef här så att du enkelt kan ändra
@@ -108,31 +158,33 @@ vector<string> find_shortest(const Dictionary &dict, const string &from, const s
     cout << "TODO: Implement me!" << endl;
     vector<Node> graph;     
     for(const string &word : dict)
-   { 
+   {  
     graph.push_back( Node{
         [dict,word](){ 
-        vector<string> res;
+        vector<int> res;
         int score{0};
-         for(const string &next_word : dict)
+         for(int i{0};i < dict.size();++i)
          { 
+               string next_word{dict[i]};
             for(int j{0}; j < 4; ++j) 
-            {  
+            {   
+             
                 if(word[j] == next_word[j])
                 { 
                     ++score ;
                 }                     
             } 
-            if(score == 3 && word != next_word) 
+            if(score == 3 ) 
             { 
-                res.push_back(next_word);
+                res.push_back(i);
                 //cout << word << " -> " << next_word << endl;
             }        
             score = 0;
         } 
-         return res;}() , false, word});  
+         return res;}() , false, word,-1});  
    } 
-   
-   /*for(int karl{0}; karl < graph.size(); ++karl){
+  /* 
+   for(int karl{0}; karl < graph.size(); ++karl){
        cout << graph[karl].link << " -> ";
    } cout << endl;
    */
@@ -140,16 +192,17 @@ vector<string> find_shortest(const Dictionary &dict, const string &from, const s
 
 
 
- queue<string> path{bfs(graph, from, to)};
-
-while(!path.empty()){
-    cout << "BACKKK    " << path.back() << endl;
-    path.pop();
+ vector<string> path {bfs(graph, from, to)}; 
+/*
+for(string const step : path)
+{
+    cout << step << " ->" << endl;
 }
-   
+*/
+  
 
 
-   return result;
+   return path;
 }
 
 /**
