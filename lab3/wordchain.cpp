@@ -93,7 +93,6 @@ vector<string> find_longest(Dictionary const& dict, const string &from) {
 		curr = que.front(); que.pop(); 
         for(string word : find_neh(dict, curr, graph)) 
         { 
-            //cout << que.size() << endl;
             graph.insert({word,curr});
             que.push(word);
         }
