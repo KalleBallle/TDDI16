@@ -40,7 +40,7 @@ int main(int argc, const char* argv[]) {
 
     auto begin = chrono::high_resolution_clock::now();
      
-    vector<Point> temp_points; 
+    vector<Point> temp_points{} ; 
      std::copy(points.begin(), points.end(),std::back_inserter(temp_points));
     /////////////////////////////////////////////////////////////////////////////
     // Draw any lines that you find in 'points' using the function 'window->draw_line'.
@@ -49,7 +49,7 @@ int main(int argc, const char* argv[]) {
     for (auto point : points) {  
         sniper_lineup.push_back(point);
     std::sort(temp_points.begin(),temp_points.end(),PolarSorter(point));
-        for (int i{0}; i <temp_points.size() ; ++i) {   
+        for (size_t i{0}; i <temp_points.size() ; ++i) {   
 
             if(point.sameSlope(temp_points[i],temp_points[i+1],tolerance)) 
             { 
@@ -57,7 +57,7 @@ int main(int argc, const char* argv[]) {
                // cout << temp_points[i] << endl;
                 //cout << "ORIGIN: "  << points[o] << " 1p:" << temp_points[i] << " 2p:" << temp_points[i+1] << endl  ;       
                 //window->draw_line({points[o],temp_points[i],temp_points[i+1]});
-            }
+}
            
               else if(sniper_lineup.size() >= 3)
             {  
