@@ -39,21 +39,23 @@ int main(int argc, const char* argv[]) {
     window->draw_points(points);
 
     auto begin = chrono::high_resolution_clock::now();
-     
-    vector<Point> temp_points{} ; 
-     std::copy(points.begin(), points.end(),std::back_inserter(temp_points));
-    /////////////////////////////////////////////////////////////////////////////
-    // Draw any lines that you find in 'points' using the function 'window->draw_line'.
-    ///////////////////////////////////////////////////////////////////////////// 
+    
     vector<Point> to_draw{};
     for (auto point : points) {
+        
+        vector<Point> temp_points{} ; 
+        
+        std::copy_if(points.begin(), points.end(), std::back_inserter(temp_points),[&point](Point& otherP){return point.x <= otherP.x;});  
         std::sort(temp_points.begin(), temp_points.end(), PolarSorter(point));
+        
         size_t start{0};    
         while (start < temp_points.size())    
         {
             to_draw.clear();
             to_draw.push_back(point);
+            
             size_t j{start + 1};
+            
             to_draw.push_back(temp_points[start]);
             
             while( j < temp_points.size() && point.sameSlope(temp_points[start], temp_points[j], tolerance)){

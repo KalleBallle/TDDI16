@@ -10,9 +10,9 @@ Mönsterigenkänning
   Matchar brute-lösningen sitt värstafall i praktiken, eller har den ett
   medelfall som är bättre?
 
-brute:
+brute:    O(n⁴), vilket sker då alla 3 punkter är på en rad, då loopar man igenom en fjärde gång för resten av punkterna, annars O(n³)
 
-fast:
+fast:     n²log(n), eftersom vi använder vår copy_if. Vilket gör att vi enbart kollar efter punkter som är framför origo. 
 
 
 - Fyll i tabellen nedan med riktiga körtider i sekunder när det känns
@@ -20,17 +20,17 @@ fast:
   Ge uppskattningar av körtiden (baserat på tidskomplexiteten)
   i övriga fall.
     
-      N       brute       sortering
+      N       brute [s]     sortering [s]
  ----------------------------------
-    150       127           10
-    200       238           21
-    300       794           48
-    400       1895          98
-    800       14979         382
-   1600       119648        1555
-   3200       O(n³)         N/A Tolerans för låg (nerd...)
-   6400       O(n³)         28768
-  12800       O(n³)         122992
+    150       0,095         0,008
+    200       0,143         0,014
+    300       0,332         0,048
+    400       0,764         0,050
+    800       5,996         0,131
+   1600       49,250        0,477
+   3200       394,000       1,862
+   6400       3152,000      7,965
+  12800       25216,00      34,870
 
 
 - Energianvändning
@@ -52,7 +52,7 @@ fast:
   - Räkna med att ditt program körs var 60:e minut (= 1 gånger/timme)
   - För- och efterbehandling är snabba, så vi kan bortse från dem
   - Indata till programmet innehåller ca 6400 punkter
-  - Det är inte skottår (= 365 dagar)
+  - Det är inte skottår (= 365 dagar)                                         // inte en a? 265.2422 år ???
 
   Att jämföra med drar en kombinerad kyl/frys ca 200 kWh per år
   (enligt Energimyndigheten).
@@ -70,10 +70,24 @@ fast:
   vi räknar på större delar av systemet, även om andra komponenter
   också drar ström i "idle".)
 
+  -> 6400 p, 24 h * 365 d, 0,028 kWh, 
 
-Förbrukning av brute på ett år: ? kWh
+  E = P * t
 
-Förbrukning av sotering på ett år: ? kWh
+  t_h = 24 * 365 = 8760 h
+  t_s = t_h / (60*60) = 8760/3600 s
+  
+  E_idle = 8 * 8760 = 70,080 kWh
+  E_kör = ( (0,036 - 0,008) * 8760) / 3600 = 0,068 kWh/s
 
-Skillnad: ? kWh
+  E_b = 70,080 + (0,036 - 0,008 ) * (3152,000 * (8760/3600)) = 284,836267 kWh
+  E_f = 70,080 + (0,036 - 0,008 ) * (   7,965 * (8760/3600)) =  70,622682 kWh
+
+Förbrukning av brute på ett år: 284,84 kWh
+
+Förbrukning av sortering på ett år: 70,62 kWh
+
+284,836267 - 70,622682 = 214,213585 kWh
+
+Skillnad: 214,21 kWh
 
