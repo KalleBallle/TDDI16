@@ -30,7 +30,7 @@
  * For example, try to replace one (or both) with std::string.
  */
 using Key_Type = int;
-using Value_Type = int;
+using Value_Type = std::string;
 
 /**
  * Some using statements to make things easier to work with below.
