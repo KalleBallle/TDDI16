@@ -181,33 +181,15 @@ void AVL_Tree_Node<Comparable>::insert(const Comparable &x, Node_Pointer &t) {
 }
 template <typename Comparable>
 void AVL_Tree_Node<Comparable>::remove(const Comparable &x, Node_Pointer &t) {
+    
     if (t == nullptr) {
         return;  // Här kan ett undantag genereras i stället ...
     }
     
     if (x < t->element) {
         remove(x, t->left);
-
-    if (node_height(t->right) - node_height(t->left) == 2)
-    {
-        if (node_height(t->right->right) >= node_height(t->right->left))
-            single_rotate_with_right_child(t);
-        else
-            double_rotate_with_right_child(t);
-    }
-    calculate_height(t);
-     
     } else if (t->element < x) {
         remove(x, t->right);
-    if (node_height(t->left) - node_height(t->right) == 2)
-    {
-        if (node_height(t->left->left) >= node_height(t->left->right))
-            single_rotate_with_left_child(t);
-        else
-            double_rotate_with_left_child(t);
-    }          
-    calculate_height(t);
-
     } else {
         // Sökt värde finns i noden t
         Node_Pointer  tmp;
@@ -217,21 +199,40 @@ void AVL_Tree_Node<Comparable>::remove(const Comparable &x, Node_Pointer &t) {
             tmp = find_min(t->right);
             t->element = tmp->element;
             remove(t->element, t->right); 
-             calculate_height(t);
-        
         } else {
             // Noden har inget eller ett barn
             tmp = t;
 
-            if (t->left == nullptr)
+            if (t->left == nullptr) {
                 t = t->right;
-            else
+            } else {
                 t = t->left;
+            }
 
             delete tmp;
+        } 
+    }
+
+     if (t == nullptr) {      
+        return;
+    }
+
+    if (node_height(t->right) - node_height(t->left) == 2) {
+        if (node_height(t->right->right) >= node_height(t->right->left)) {
+            single_rotate_with_right_child(t);
+        } else {
+            double_rotate_with_right_child(t);
         }
     } 
     
+    else if (node_height(t->left) - node_height(t->right) == 2) {
+        if (node_height(t->left->left) >= node_height(t->left->right)) {
+            single_rotate_with_left_child(t);
+        } else {
+            double_rotate_with_left_child(t);
+        }
+    }           
+    calculate_height(t);
 }
 
 
